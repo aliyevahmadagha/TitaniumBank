@@ -16,6 +16,10 @@ final class HomeViewModel {
         return cardList.count
     }
     
+    func findPath() {
+        helper.findPath()
+    }
+    
     func getItem(index: Int) -> CardProtocol {
         let cardList = helper.fetchCardData()
         let item = cardList[index]

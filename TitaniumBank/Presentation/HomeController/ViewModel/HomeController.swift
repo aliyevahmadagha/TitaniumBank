@@ -69,8 +69,7 @@ final class HomeController: BaseViewController {
         super.viewDidLoad()
         setupCollectionView()
         
-        let myViewModel = MyCardsViewModel()
-        myViewModel.delegate = self
+        viewModel.findPath()
     }
     
     
@@ -163,13 +162,6 @@ extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         return cell
         
-    }
-}
-
-extension HomeController: CollectionReloadProtocol {
-    
-    func reload() {
-        self.cardCollection.reloadData()
     }
 }
 

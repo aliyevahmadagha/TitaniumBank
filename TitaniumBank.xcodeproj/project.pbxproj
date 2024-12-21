@@ -39,6 +39,9 @@
 		D0B942F42D15C3A200CBD473 /* MyCardsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B942F32D15C3A200CBD473 /* MyCardsController.swift */; };
 		D0B942F62D15C3DF00CBD473 /* MyCardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B942F52D15C3DF00CBD473 /* MyCardsViewModel.swift */; };
 		D0B942F92D15C50200CBD473 /* CardTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B942F82D15C50200CBD473 /* CardTableCell.swift */; };
+		D0B943002D16C50E00CBD473 /* SheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B942FF2D16C50E00CBD473 /* SheetController.swift */; };
+		D0B943022D16C5C000CBD473 /* SheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B943012D16C5C000CBD473 /* SheetViewModel.swift */; };
+		D0B943062D17174C00CBD473 /* SheetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B943052D17174C00CBD473 /* SheetCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +78,9 @@
 		D0B942F32D15C3A200CBD473 /* MyCardsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCardsController.swift; sourceTree = "<group>"; };
 		D0B942F52D15C3DF00CBD473 /* MyCardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCardsViewModel.swift; sourceTree = "<group>"; };
 		D0B942F82D15C50200CBD473 /* CardTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTableCell.swift; sourceTree = "<group>"; };
+		D0B942FF2D16C50E00CBD473 /* SheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetController.swift; sourceTree = "<group>"; };
+		D0B943012D16C5C000CBD473 /* SheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewModel.swift; sourceTree = "<group>"; };
+		D0B943052D17174C00CBD473 /* SheetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +153,7 @@
 		D0B9429C2D1367F800CBD473 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				D0B942FA2D16C4B100CBD473 /* SheetController */,
 				D0B942EF2D15C34700CBD473 /* MyCardsController */,
 				D0B942DB2D13A0EB00CBD473 /* TransferController */,
 				D0B942C42D138A6100CBD473 /* AddCardController */,
@@ -464,6 +471,48 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		D0B942FA2D16C4B100CBD473 /* SheetController */ = {
+			isa = PBXGroup;
+			children = (
+				D0B942FE2D16C4E600CBD473 /* Model */,
+				D0B942FD2D16C4DE00CBD473 /* View */,
+				D0B942FB2D16C4C900CBD473 /* ViewModel */,
+			);
+			path = SheetController;
+			sourceTree = "<group>";
+		};
+		D0B942FB2D16C4C900CBD473 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D0B942FF2D16C50E00CBD473 /* SheetController.swift */,
+				D0B943012D16C5C000CBD473 /* SheetViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		D0B942FD2D16C4DE00CBD473 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D0B943032D17172200CBD473 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D0B942FE2D16C4E600CBD473 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D0B943032D17172200CBD473 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D0B943052D17174C00CBD473 /* SheetCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -543,12 +592,15 @@
 				D0B942B42D136E2F00CBD473 /* Extension.swift in Sources */,
 				D0B942E62D13A27100CBD473 /* CardDTO.swift in Sources */,
 				D0B942982D13679700CBD473 /* LoginViewModel.swift in Sources */,
+				D0B943062D17174C00CBD473 /* SheetCell.swift in Sources */,
 				D0B942D12D138C5F00CBD473 /* AddCardController.swift in Sources */,
 				D0B942F42D15C3A200CBD473 /* MyCardsController.swift in Sources */,
+				D0B943002D16C50E00CBD473 /* SheetController.swift in Sources */,
 				D0B942E82D13A27C00CBD473 /* CardModel.swift in Sources */,
 				D0B942AC2D136A5C00CBD473 /* UserModel.swift in Sources */,
 				D0B942A72D13691100CBD473 /* RegisterViewModel.swift in Sources */,
 				D0B942F62D15C3DF00CBD473 /* MyCardsViewModel.swift in Sources */,
+				D0B943022D16C5C000CBD473 /* SheetViewModel.swift in Sources */,
 				D0B942EE2D14E09900CBD473 /* CardProtocol.swift in Sources */,
 				D0B942A92D13694200CBD473 /* RegisterController.swift in Sources */,
 				D0B942B62D13750000CBD473 /* BaseViewController.swift in Sources */,

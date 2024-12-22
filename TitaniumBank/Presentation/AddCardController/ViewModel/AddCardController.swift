@@ -17,7 +17,6 @@ final class AddCardController: BaseViewController {
     
     private lazy var cardTypeImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: "cardDesign")
         return image
     }()
     
@@ -164,6 +163,7 @@ final class AddCardController: BaseViewController {
             viewModel.saveCard(model: newCard)
             
             configureUI()
+            navigationController?.popViewController(animated: true)
             
         } else {
             showMessage(title: "Error", message: "Fields cannot be empty", actionTitle: "Ok")

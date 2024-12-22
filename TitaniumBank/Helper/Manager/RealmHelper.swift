@@ -35,6 +35,32 @@ class RealmHelper {
         }
     }
     
+    func decreaseBalance(pan: String, amount: Double) {
+        let cardList = realm.objects(CardDTO.self)
+        
+        for i in cardList {
+            if i.cardNumber == pan {
+                try! realm.write({
+                    i.cardBalance -= amount
+                })
+            }
+        }
+        
+    }
+    
+    func increaseBalance(pan: String, amount: Double) {
+        let cardList = realm.objects(CardDTO.self)
+        
+        for i in cardList {
+            if i.cardNumber == pan {
+                print(i.cardNumber)
+                try! realm.write({
+                    i.cardBalance += amount
+                })
+            }
+        }
+    }
+    
     func saveCard(dtoModel: CardDTO) {
         do {
             try realm.write {

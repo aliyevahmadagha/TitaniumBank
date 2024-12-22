@@ -9,37 +9,48 @@ import UIKit
 
 final class TransferController: BaseViewController {
     
-    private lazy var cardTypeImage: UIImageView = {
-        let image = UIImageView()
-        return image
-    }()
+    //    private lazy var cardTypeImage: UIImageView = {
+    //        let image = UIImageView()
+    //        return image
+    //    }()
     
-    private lazy var fromSelect: UITextField = {
+    private lazy var fromSelectField: UITextField = {
         let text = UITextField()
         text.layer.borderWidth = 1
+        text.placeholder = "Transfer from this card"
         text.delegate = self
         return text
     }()
     
-    private lazy var toSelect: UITextField = {
+    private lazy var toSelectField: UITextField = {
         let text = UITextField()
         text.layer.borderWidth = 1
+        text.placeholder = "Transfer to this card"
         text.delegate = self
         return text
     }()
     
-    private lazy var amount: UITextField = {
+    private lazy var amountField: UITextField = {
         let text = UITextField()
         text.layer.borderWidth = 1
+        text.placeholder = "Amount"
         text.keyboardType = .numberPad
         text.delegate = self
         return text
     }()
     
-    private let viewModel: TransferViewModel
+    private lazy var sendButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(sendButtonClicked), for: .touchUpInside)
+        button.setTitle("Submit", for: .normal)
+        button.backgroundColor = .lightGray
+        return button
+    }()
+    
+    private let transferViewModel: TransferViewModel
     
     init(viewModel: TransferViewModel) {
-        self.viewModel = viewModel
+        self.transferViewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,7 +60,34 @@ final class TransferController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+    }
+    
+    @objc private func sendButtonClicked() {
+        
+        if let fromtext = fromSelectField.text, let toText = toSelectField.text {
+            
+            guard !fromtext.isEmpty, !toText.isEmpty else {return}
+            guard let amount = amountField.text else {return}
+            guard let doubleAmount = Double(amount) else {return}
+            
+            if doubleAmount > transferViewModel.getBalance(pan: fromtext) {
+                
+                showMessage(title: "Error", message: "max: \(transferViewModel.getBalance(pan: fromtext))", actionTitle: "Ok")
+                amountField.text = ""
+                
+            } else {
+                transferViewModel.increaseBalance(pan: toText, amount: doubleAmount)
+                transferViewModel.decreaseBalance(pan: fromtext, amount: doubleAmount)
+                configureFields()
+            }
+        }
+    }
+    
+    fileprivate func configureFields() {
+        fromSelectField.text = ""
+        toSelectField.text = ""
+        amountField.text = ""
     }
     
     fileprivate func showSheet(index: Int) {
@@ -61,72 +99,80 @@ final class TransferController: BaseViewController {
         switch index {
         case 0:
             viewModel.callback = { text in
-                self.fromSelect.text = text
+                self.fromSelectField.text = text
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    if self.fromSelect.text == self.toSelect.text {
+                    if self.fromSelectField.text == self.toSelectField.text {
                         self.showMessage(title: "Error", message: "you cannot select the same cards", actionTitle: "ok")
-                        self.fromSelect.text = ""
+                        self.fromSelectField.text = ""
                     }
                 }
-                
             }
         case 1:
             viewModel.callback = { text in
-                self.toSelect.text = text
+                self.toSelectField.text = text
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    if self.fromSelect.text == self.toSelect.text {
+                    if self.fromSelectField.text == self.toSelectField.text {
                         self.showMessage(title: "Error", message: "you cannot select the same cards", actionTitle: "ok")
-                        self.toSelect.text = ""
+                        self.toSelectField.text = ""
                     }
                 }
             }
         default:
             break
         }
-       
+        
         if let sheetPresentationController = sheetVC.sheetPresentationController {
             sheetPresentationController.detents = [.medium()]
             sheetPresentationController.prefersGrabberVisible = true
         }
         present(sheetVC, animated: true)
     }
-
+    
     override func configureView() {
         super.configureView()
         
-        view.addSubview(fromSelect)
-        view.addSubview(toSelect)
-        view.addSubview(amount)
+        view.addSubview(fromSelectField)
+        view.addSubview(toSelectField)
+        view.addSubview(amountField)
+        view.addSubview(sendButton)
         
-        fromSelect.translatesAutoresizingMaskIntoConstraints = false
-        toSelect.translatesAutoresizingMaskIntoConstraints = false
-        amount.translatesAutoresizingMaskIntoConstraints = false
+        fromSelectField.translatesAutoresizingMaskIntoConstraints = false
+        toSelectField.translatesAutoresizingMaskIntoConstraints = false
+        amountField.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
     override func configureRestriction() {
         super.configureRestriction()
         
         NSLayoutConstraint.activate([
-            fromSelect.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            fromSelect.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
-            fromSelect.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            fromSelect.heightAnchor.constraint(equalToConstant: 48)
+            fromSelectField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            fromSelectField.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
+            fromSelectField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            fromSelectField.heightAnchor.constraint(equalToConstant: 48)
         ])
         
         NSLayoutConstraint.activate([
-            toSelect.topAnchor.constraint(equalTo: fromSelect.bottomAnchor, constant: 24),
-            toSelect.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
-            toSelect.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            toSelect.heightAnchor.constraint(equalToConstant: 48)
+            toSelectField.topAnchor.constraint(equalTo: fromSelectField.bottomAnchor, constant: 24),
+            toSelectField.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
+            toSelectField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            toSelectField.heightAnchor.constraint(equalToConstant: 48)
         ])
         
         NSLayoutConstraint.activate([
-            amount.topAnchor.constraint(equalTo: toSelect.bottomAnchor, constant: 24),
-            amount.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
-            amount.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            amount.heightAnchor.constraint(equalToConstant: 48)
+            amountField.topAnchor.constraint(equalTo: toSelectField.bottomAnchor, constant: 24),
+            amountField.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
+            amountField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            amountField.heightAnchor.constraint(equalToConstant: 48)
+        ])
+        
+        NSLayoutConstraint.activate([
+            sendButton.topAnchor.constraint(equalTo: amountField.bottomAnchor, constant: 48),
+            sendButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
+            sendButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            sendButton.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
 }
@@ -135,13 +181,13 @@ extension TransferController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         switch textField {
-        case fromSelect:
+        case fromSelectField:
             showSheet(index: 0)
             return false
-        case toSelect:
+        case toSelectField:
             showSheet(index: 1)
             return false
-        case amount:
+        case amountField:
             return true
             
         default:

@@ -11,15 +11,13 @@ final class SheetViewModel {
     
     private let helper = RealmHelper()
     
-    var currentPan: String?
-    
     var callback: ((String) -> Void)?
     
     func getCardModel(index: Int) -> String {
         let cardList = helper.fetchCardData()
-        let allPan = cardList[index].numberTitle
-        let text = allPan.suffix(4)
-        let pan = "**** \(String(text))"
+        let pan = cardList[index].numberTitle
+//        let text = allPan.suffix(4)
+//        let pan = "**** \(String(text))"
         return pan
     }
     

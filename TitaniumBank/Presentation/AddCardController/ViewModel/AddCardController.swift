@@ -233,7 +233,6 @@ final class AddCardController: BaseViewController {
         NSLayoutConstraint.activate([
             dateLabel.widthAnchor.constraint(equalToConstant: 8),
             monthField.widthAnchor.constraint(equalToConstant: 36),
-//            yearField.widthAnchor.constraint(equalToConstant: 36),
             yearField.leftAnchor.constraint(equalTo: dateLabel.rightAnchor, constant: 8),
             yearField.bottomAnchor.constraint(equalTo: cardImage.bottomAnchor, constant: -12)
         ])
@@ -258,51 +257,48 @@ extension AddCardController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         
-        if textField == panField {
-            let currentText = textField.text ?? ""
-            let firstNum = currentText.first
-            switch firstNum {
-            case "5", "6", "7", "8", "9":
+        switch textField {
+        case panField:
+            if textField.checkCardType() == "masterCard" {
                 cardTypeImage.isHidden = false
-                cardTypeImage.image = UIImage(named: "masterCard")
-                
-            case "1", "2", "3", "4":
+                cardTypeImage.image = UIImage(named: textField.checkCardType())
+            } else if textField.checkCardType() == "visaCard" {
                 cardTypeImage.isHidden = false
-                cardTypeImage.image = UIImage(named: "visaCard")
-                
-                
-            default:
+                cardTypeImage.image = UIImage(named: textField.checkCardType())
+            } else {
                 cardTypeImage.isHidden = true
             }
             
-            if currentText.count == 19 {
-                monthField.becomeFirstResponder()
-            }
-        }
-        
-        
-        if textField == monthField {
-            let currentText = textField.text ?? ""
+            guard textField.checkFieldCount(number: 19) else {return}
+            textField.switchTextField(textField: monthField)
             
-            guard let currentNumber = Int(currentText) else {return}
-            if currentNumber > 12 {
+        case monthField:
+            guard let text = textField.text else {return}
+            guard text.count == 2 else {return}
+            
+            let result = textField.checkMonth()
+            
+            guard result else {
                 showMessage(title: "Error", message: "wrong month format", actionTitle: "Ok")
-                textField.text = ""
+                return
             }
-        }
-        
-        if textField == yearField {
-            let currentText = textField.text ?? ""
+            textField.switchTextField(textField: yearField)
             
-            guard let currentNumber = Int(currentText) else {return}
+        case yearField:
+            guard let text = textField.text else {return}
+            guard text.count == 2 else {return}
             
-            if currentText.count == 2 {
-                if currentNumber < 25 {
-                    showMessage(title: "Error", message: "wrong year format", actionTitle: "Ok")
-                    textField.text = ""
-                }
+            let result  = textField.checkYearDigit()
+            guard result else {
+                showMessage(title: "Error", message: "Wrong year format", actionTitle: "Ok")
+                return
             }
+            textField.switchTextField(textField: cvcField)
+            
+        default:
+            break
         }
+
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -310,51 +306,13 @@ extension AddCardController: UITextFieldDelegate {
         switch textField  {
             
         case panField:
-            //            let currentText = textField.text ?? ""
-            //
-            //            let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            //
-            //            return prospectiveText.range(of: "^[0-9]{0,19}$", options: .regularExpression) != nil
-            
-            let currentText = textField.text ?? ""
-            let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            
-            // Strip out all non-digit characters
-            let digitsOnly = newText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-            
-            // Check if the new input exceeds 16 digits
-            if digitsOnly.count > 16 {
-                return false
-            }
-            
-            // Create the new formatted string with spaces every four digits
-            var formattedText = ""
-            for (index, digit) in digitsOnly.enumerated() {
-                if index > 0 && index % 4 == 0 {
-                    formattedText += " "  // Add space before adding the next digit
-                }
-                formattedText += String(digit)
-            }
-            
-            textField.text = formattedText
-            return false  // Return false since we've manually set the text field value
-            
-            
+            return textField.checkCardNumber(range: range, replacementString: string)
         case monthField:
-            let currentText = textField.text ?? ""
-            let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            return prospectiveText.range(of: "^[0-9]{0,2}$", options: .regularExpression) != nil
-            
+            return textField.checkDate(range: range, replacementString: string)
         case yearField:
-            let currentText = textField.text ?? ""
-            let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            return prospectiveText.range(of: "^[0-9]{0,2}$", options: .regularExpression) != nil
-            
+            return textField.checkDate(range: range, replacementString: string)
         case cvcField:
-            let currentText = textField.text ?? ""
-            let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            return prospectiveText.range(of: "^[0-9]{0,3}$", options: .regularExpression) != nil
-            
+            return textField.checkCVC(range: range, replacementString: string)
         default:
             return false
         }
@@ -365,19 +323,13 @@ extension AddCardController: UITextFieldDelegate {
         switch textField {
             
         case monthField:
-            guard let text = textField.text else {return}
-            guard text.count == 1 else {return}
-            textField.text = "0\(text)"
+            textField.checkMonthDigit()
             
         case yearField:
-            guard let text = textField.text else {return}
-            guard text.count == 1 else {return}
-            textField.text = "0\(text)"
-            
-            guard let currentNumber = Int(text) else {return}
-            if currentNumber < 25 {
-                showMessage(title: "Error", message: "wrong year format", actionTitle: "Ok")
-                textField.text = ""
+            let result  = textField.checkYearDigit()
+            guard result else {
+                showMessage(title: "Error", message: "you can enter numbers between 25 and 28", actionTitle: "Ok")
+                return
             }
             
         default:

@@ -85,8 +85,6 @@ final class RegisterController: BaseViewController {
         } else {
             showMessage(title: "Error", message: "Fields cannot be empty", actionTitle: "Ok")
         }
-        
-        
     }
     
     override func configureView() {

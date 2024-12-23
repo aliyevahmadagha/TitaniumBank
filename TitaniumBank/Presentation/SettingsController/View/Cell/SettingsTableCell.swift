@@ -43,6 +43,4 @@ class SettingsTableCell: UITableViewCell {
             settingsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
-    
-
 }

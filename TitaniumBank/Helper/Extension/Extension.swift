@@ -108,7 +108,7 @@ extension UITextField {
         switch firstNum {
         case "5", "6", "7", "8", "9":
             return "masterCard"
-        case "1", "2", "3", "4":
+        case "0", "1", "2", "3", "4":
             return "visaCard"
         default:
             return ""

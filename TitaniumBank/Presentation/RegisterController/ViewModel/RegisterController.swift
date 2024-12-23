@@ -10,10 +10,7 @@ import UIKit
 final class RegisterController: BaseViewController {
     
     private lazy var registerButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(registerButtonClicked), for: .touchUpInside)
-        button.setTitle("Register", for: .normal)
-        button.backgroundColor = .systemGray
+        let button = ReusableButton(title: "Register", onAction: registerButtonClicked)
         return button
     }()
     
@@ -30,30 +27,22 @@ final class RegisterController: BaseViewController {
     }()
     
     private lazy var fullnameField: UITextField = {
-        let field = UITextField()
-        field.layer.borderWidth = 1
-        field.placeholder = " Aliyev Ahmadagha"
+        let field = ReusableTextField(placeholderTitle: "  Aliyev Ahmadagha", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         return field
     }()
     
     private lazy var emailField: UITextField = {
-        let field = UITextField()
-        field.layer.borderWidth = 1
-        field.placeholder = " ahmadagha@gmail.com"
+        let field = ReusableTextField(placeholderTitle: "  ahmadagha@gmail.com", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         return field
     }()
     
     private lazy var passwordField: UITextField = {
-        let field = UITextField()
-        field.layer.borderWidth = 1
-        field.placeholder = " ********"
+        let field = ReusableTextField(placeholderTitle: "  ********", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         return field
     }()
     
     private lazy var finCodeField: UITextField = {
-        let field = UITextField()
-        field.layer.borderWidth = 1
-        field.placeholder = " QWERTY8"
+        let field = ReusableTextField(placeholderTitle: "  QWERTY8", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         return field
     }()
     

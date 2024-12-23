@@ -21,53 +21,29 @@ final class AddCardController: BaseViewController {
     }()
     
     private lazy var cardStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [monthField, dateLabel])
+        let stack = UIStackView(arrangedSubviews: [monthField, dateLabel, yearField])
         stack.axis = .horizontal
         stack.spacing = 4
         return stack
     }()
     
     private lazy var panField: UITextField = {
-        let textField = UITextField()
-        let placeholderText = "**** **** **** ****"
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white
-        ]
-        textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
-        textField.textColor = .white
+        let textField = ReusableTextField(placeholderTitle: "**** **** **** ****", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
         return textField
     }()
     
     private lazy var cvcField: UITextField = {
-        let textField = UITextField()
-        let placeholderText = "CVC"
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white
-        ]
-        textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
-        textField.textColor = .white
+        let textField = ReusableTextField(placeholderTitle: "CVC", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
         return textField
     }()
     
     private lazy var monthField: UITextField = {
-        let textField = UITextField()
-        let placeholderText = "MM"
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white
-        ]
-        textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
-        textField.textColor = .white
+        let textField = ReusableTextField(placeholderTitle: "MM", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
         return textField
     }()
     
     private lazy var yearField: UITextField = {
-        let textField = UITextField()
-        let placeholderText = "YY"
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white
-        ]
-        textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
-        textField.textColor = .white
+        let textField = ReusableTextField(placeholderTitle: "YY", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .center)
         return textField
     }()
     
@@ -188,7 +164,7 @@ final class AddCardController: BaseViewController {
         view.addSubview(cardTypeImage)
         view.addSubview(cvcField)
         view.addSubview(submitButton)
-        view.addSubview(yearField)
+//        view.addSubview(yearField)
         
         cardImage.translatesAutoresizingMaskIntoConstraints = false
         cardStack.translatesAutoresizingMaskIntoConstraints = false
@@ -233,8 +209,7 @@ final class AddCardController: BaseViewController {
         NSLayoutConstraint.activate([
             dateLabel.widthAnchor.constraint(equalToConstant: 8),
             monthField.widthAnchor.constraint(equalToConstant: 36),
-            yearField.leftAnchor.constraint(equalTo: dateLabel.rightAnchor, constant: 8),
-            yearField.bottomAnchor.constraint(equalTo: cardImage.bottomAnchor, constant: -12)
+            yearField.widthAnchor.constraint(equalToConstant: 36),
         ])
         
         NSLayoutConstraint.activate([
@@ -298,7 +273,6 @@ extension AddCardController: UITextFieldDelegate {
         default:
             break
         }
-
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

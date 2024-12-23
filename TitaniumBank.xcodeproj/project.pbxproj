@@ -42,6 +42,8 @@
 		D0B943002D16C50E00CBD473 /* SheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B942FF2D16C50E00CBD473 /* SheetController.swift */; };
 		D0B943022D16C5C000CBD473 /* SheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B943012D16C5C000CBD473 /* SheetViewModel.swift */; };
 		D0B943062D17174C00CBD473 /* SheetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B943052D17174C00CBD473 /* SheetCell.swift */; };
+		D0B943092D19CDE900CBD473 /* ReusableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B943082D19CDE900CBD473 /* ReusableTextField.swift */; };
+		D0B9430B2D19EF3800CBD473 /* ReusableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B9430A2D19EF3800CBD473 /* ReusableButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +83,8 @@
 		D0B942FF2D16C50E00CBD473 /* SheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetController.swift; sourceTree = "<group>"; };
 		D0B943012D16C5C000CBD473 /* SheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewModel.swift; sourceTree = "<group>"; };
 		D0B943052D17174C00CBD473 /* SheetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetCell.swift; sourceTree = "<group>"; };
+		D0B943082D19CDE900CBD473 /* ReusableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableTextField.swift; sourceTree = "<group>"; };
+		D0B9430A2D19EF3800CBD473 /* ReusableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +139,7 @@
 		D0B9429A2D1367D800CBD473 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				D0B943072D19CDB500CBD473 /* ReusableComponents */,
 				D0B942B72D137C1400CBD473 /* Manager */,
 				D0B942B22D136E1B00CBD473 /* Extension */,
 			);
@@ -513,6 +518,15 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		D0B943072D19CDB500CBD473 /* ReusableComponents */ = {
+			isa = PBXGroup;
+			children = (
+				D0B943082D19CDE900CBD473 /* ReusableTextField.swift */,
+				D0B9430A2D19EF3800CBD473 /* ReusableButton.swift */,
+			);
+			path = ReusableComponents;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -607,6 +621,7 @@
 				D0B942D82D1394BD00CBD473 /* SettingsTableCell.swift in Sources */,
 				D0B942CD2D138B8000CBD473 /* SettingsController.swift in Sources */,
 				D0B942EB2D14DF9800CBD473 /* CardCell.swift in Sources */,
+				D0B9430B2D19EF3800CBD473 /* ReusableButton.swift in Sources */,
 				D0B942D52D13907100CBD473 /* LayoutExtension.swift in Sources */,
 				D0B942C92D138AA900CBD473 /* HomeController.swift in Sources */,
 				D0B942882D13671800CBD473 /* LoginController.swift in Sources */,
@@ -620,6 +635,7 @@
 				D0B942BB2D1388D800CBD473 /* TabBarController.swift in Sources */,
 				D0B942B12D136B8800CBD473 /* UserDTO.swift in Sources */,
 				D0B942862D13671800CBD473 /* SceneDelegate.swift in Sources */,
+				D0B943092D19CDE900CBD473 /* ReusableTextField.swift in Sources */,
 				D0B942CF2D138BB900CBD473 /* SettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,18 +12,12 @@ final class LoginController: BaseViewController {
     private let helper = RealmHelper()
     
     private lazy var goRegisterButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(goRegisterButtonClicked), for: .touchUpInside)
-        button.setTitle("Don’t you have an account", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        let button = ReusableButton(title: "Don’t you have an account", onAction: goRegisterButtonClicked, bgColor: .systemBackground, titleColor: .lightGray)
         return button
     }()
     
     private lazy var loginButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(loginButtonClicked), for: .touchUpInside)
-        button.setTitle("Login", for: .normal)
-        button.backgroundColor = .systemGray
+        let button = ReusableButton(title: "Login", onAction: loginButtonClicked)
         return button
     }()
     
@@ -40,16 +34,12 @@ final class LoginController: BaseViewController {
     }()
     
     private lazy var emailField: UITextField = {
-        let field = UITextField()
-        field.layer.borderWidth = 1
-        field.placeholder = " ahmadagha@gmail.com"
+        let field = ReusableTextField(placeholderTitle: "  ahmadagha@gmail.com", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         return field
     }()
     
     private lazy var passwordField: UITextField = {
-        let field = UITextField()
-        field.layer.borderWidth = 1
-        field.placeholder = " ********"
+        let field = ReusableTextField(placeholderTitle: "  ********", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         return field
     }()
 
@@ -136,7 +126,7 @@ final class LoginController: BaseViewController {
         NSLayoutConstraint.activate([
             loginButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24),
             loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24),
-            loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -36),
+            loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -48),
             loginButton.heightAnchor.constraint(equalToConstant: 48)
         ])
         

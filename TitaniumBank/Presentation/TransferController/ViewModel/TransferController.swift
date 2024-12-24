@@ -79,6 +79,7 @@ final class TransferController: BaseViewController {
             } else {
                 transferViewModel.increaseBalance(pan: toText, amount: doubleAmount)
                 transferViewModel.decreaseBalance(pan: fromtext, amount: doubleAmount)
+                reloadMyCards()
                 configureFields()
             }
         }
@@ -88,6 +89,10 @@ final class TransferController: BaseViewController {
         fromSelectField.text = ""
         toSelectField.text = ""
         amountField.text = ""
+    }
+    
+    fileprivate func reloadMyCards() {
+        NotificationCenter.default.post(name: .reloadDataNotification, object: nil)
     }
     
     fileprivate func showSheet(index: Int) {

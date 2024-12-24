@@ -26,14 +26,14 @@ final class HomeController: BaseViewController {
         return collection
     }()
     
-    lazy var cardStack: UIStackView = {
+    private lazy var cardStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 12
         return stack
     }()
     
-    lazy var transferButton: UIButton = {
+    private lazy var transferButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(transferButtonClicked), for: .touchUpInside)
         button.setTitle("⇄", for: .normal)
@@ -43,12 +43,8 @@ final class HomeController: BaseViewController {
         return button
     }()
     
-    lazy var addButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(addButtonClicked), for: .touchUpInside)
-        button.setTitle("+", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .lightGray
+    private lazy var addButton: UIButton = {
+        let button = ReusableButton(title: "+", onAction: addButtonClicked, bgColor: .lightGray, titleColor: .black)
         button.layer.cornerRadius = 24
         return button
     }()

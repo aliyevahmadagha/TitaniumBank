@@ -34,18 +34,12 @@ final class HomeController: BaseViewController {
     }()
     
     private lazy var transferButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(transferButtonClicked), for: .touchUpInside)
-        button.setTitle("⇄", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .lightGray
-        button.layer.cornerRadius = 24
+        let button = ReusableButton(title: "⇄", onAction: transferButtonClicked, cornerRad: 24, bgColor: .lightGray, titleColor: .black)
         return button
     }()
     
     private lazy var addButton: UIButton = {
-        let button = ReusableButton(title: "+", onAction: addButtonClicked, bgColor: .lightGray, titleColor: .black)
-        button.layer.cornerRadius = 24
+        let button = ReusableButton(title: "+", onAction: addButtonClicked, cornerRad: 24, bgColor: .lightGray, titleColor: .black)
         return button
     }()
     
@@ -60,12 +54,19 @@ final class HomeController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .reloadDataNotification, object: nil)
+    }
+    
+    fileprivate func configureButton() {
+        
+        guard viewModel.getListCount() >= 2 else {
+            transferButton.isHidden = true
+            return
+        }
+        transferButton.isHidden = false
     }
     
     @objc func reloadCollectionView() {
@@ -133,7 +134,6 @@ final class HomeController: BaseViewController {
         addButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    
     override func configureRestriction() {
         super.configureRestriction()
         
@@ -157,13 +157,13 @@ final class HomeController: BaseViewController {
             addButton.widthAnchor.constraint(equalToConstant: 48)
         ])
     }
-    
 }
 
 extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.getListCount()
+        configureButton()
+        return viewModel.getListCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -9,7 +9,15 @@ import Foundation
 
 final class TransferViewModel {
     
+    enum ViewState {
+        case loading
+        case loaded
+        case success
+        case error
+    }
+    
     private let helper = RealmHelper()
+    var success: ((ViewState) -> Void)?
         
     func decreaseBalance(pan: String, amount: Double) {
         helper.decreaseBalance(pan: pan, amount: amount)
@@ -28,7 +36,6 @@ final class TransferViewModel {
                 balance = i.cardBalance
             }
         }
-        
         return balance
     }
 }

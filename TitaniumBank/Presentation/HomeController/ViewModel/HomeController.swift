@@ -78,7 +78,16 @@ final class HomeController: BaseViewController {
     
     
     @objc fileprivate func transferButtonClicked() {
-        let controller = TransferController(viewModel: TransferViewModel())
+        let viewModel = TransferViewModel()
+        let controller = TransferController(viewModel: viewModel)
+        
+        viewModel.success = { [weak self] state in
+            guard let self = self else {return}
+
+            if state == .success {
+                cardCollection.reloadData()
+            }
+        }
         navigationController?.pushViewController(controller, animated: true)
     }
     

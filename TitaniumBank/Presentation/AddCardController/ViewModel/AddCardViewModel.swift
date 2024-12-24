@@ -7,14 +7,14 @@
 
 import Foundation
 
-enum ViewState {
-    case loading
-    case loaded
-    case success
-    case error(String)
-}
-
 final class AddCardViewModel {
+    
+    enum ViewState {
+        case loading
+        case loaded
+        case success
+        case error(String)
+    }
     
     let helper = RealmHelper()
     

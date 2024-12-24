@@ -14,36 +14,41 @@ final class TransferController: BaseViewController {
     //        return image
     //    }()
     
+    private lazy var viewForIndicator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var indicatorView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .blue
+        return indicator
+    }()
+    
     private lazy var fromSelectField: UITextField = {
-        let text = UITextField()
-        text.layer.borderWidth = 1
-        text.placeholder = "Transfer from this card"
+        let text = ReusableTextField(placeholderTitle: " Transfer from this card", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         text.delegate = self
         return text
     }()
     
     private lazy var toSelectField: UITextField = {
-        let text = UITextField()
-        text.layer.borderWidth = 1
-        text.placeholder = "Transfer to this card"
+        let text = ReusableTextField(placeholderTitle: " Transfer to this card", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         text.delegate = self
         return text
     }()
     
     private lazy var amountField: UITextField = {
-        let text = UITextField()
-        text.layer.borderWidth = 1
-        text.placeholder = "Amount"
+        let text = ReusableTextField(placeholderTitle: " Amount", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
         text.keyboardType = .numberPad
         text.delegate = self
         return text
     }()
     
     private lazy var sendButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(sendButtonClicked), for: .touchUpInside)
-        button.setTitle("Submit", for: .normal)
-        button.backgroundColor = .lightGray
+        let button = ReusableButton(title: "Send", onAction: sendButtonClicked, bgColor: .lightGray)
         return button
     }()
     
@@ -60,7 +65,6 @@ final class TransferController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     @objc private func sendButtonClicked() {
@@ -73,14 +77,29 @@ final class TransferController: BaseViewController {
             
             if doubleAmount > transferViewModel.getBalance(pan: fromtext) {
                 
-                showMessage(title: "Error", message: "max: \(transferViewModel.getBalance(pan: fromtext))", actionTitle: "Ok")
+                transferViewModel.success?(.error)
+                showMessage(title: "", message: "your balance: \(transferViewModel.getBalance(pan: fromtext))", actionTitle: "Ok")
                 amountField.text = ""
                 
             } else {
-                transferViewModel.increaseBalance(pan: toText, amount: doubleAmount)
-                transferViewModel.decreaseBalance(pan: fromtext, amount: doubleAmount)
-                reloadMyCards()
-                configureFields()
+                transferViewModel.success?(.loading)
+                viewForIndicator.isHidden = false
+                indicatorView.startAnimating()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self.transferViewModel.increaseBalance(pan: toText, amount: doubleAmount)
+                    self.transferViewModel.decreaseBalance(pan: fromtext, amount: doubleAmount)
+                    
+                    
+                    self.transferViewModel.success?(.loaded)
+                    self.indicatorView.stopAnimating()
+                    self.viewForIndicator.isHidden = true
+                    
+                    self.configureFields()
+                    self.transferViewModel.success?(.success)
+                    
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
         }
     }
@@ -89,10 +108,6 @@ final class TransferController: BaseViewController {
         fromSelectField.text = ""
         toSelectField.text = ""
         amountField.text = ""
-    }
-    
-    fileprivate func reloadMyCards() {
-        NotificationCenter.default.post(name: .reloadDataNotification, object: nil)
     }
     
     fileprivate func showSheet(index: Int) {
@@ -142,11 +157,15 @@ final class TransferController: BaseViewController {
         view.addSubview(toSelectField)
         view.addSubview(amountField)
         view.addSubview(sendButton)
+        view.addSubview(viewForIndicator)
+        viewForIndicator.addSubview(indicatorView)
         
         fromSelectField.translatesAutoresizingMaskIntoConstraints = false
         toSelectField.translatesAutoresizingMaskIntoConstraints = false
         amountField.translatesAutoresizingMaskIntoConstraints = false
         sendButton.translatesAutoresizingMaskIntoConstraints = false
+        viewForIndicator.translatesAutoresizingMaskIntoConstraints = false
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     override func configureRestriction() {
@@ -178,6 +197,13 @@ final class TransferController: BaseViewController {
             sendButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
             sendButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             sendButton.heightAnchor.constraint(equalToConstant: 48)
+        ])
+        
+        viewForIndicator.fillSuperview()
+        
+        NSLayoutConstraint.activate([
+            indicatorView.centerXAnchor.constraint(equalTo: viewForIndicator.centerXAnchor),
+            indicatorView.centerYAnchor.constraint(equalTo: viewForIndicator.centerYAnchor)
         ])
     }
 }

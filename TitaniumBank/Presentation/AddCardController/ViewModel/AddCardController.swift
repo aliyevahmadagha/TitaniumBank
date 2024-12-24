@@ -28,23 +28,23 @@ final class AddCardController: BaseViewController {
     }()
     
     private lazy var panField: UITextField = {
-        let textField = ReusableTextField(placeholderTitle: "**** **** **** ****", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
-        return textField
+        let field = ReusableTextField(placeholderTitle: "**** **** **** ****", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
+        return field
     }()
     
     private lazy var cvcField: UITextField = {
-        let textField = ReusableTextField(placeholderTitle: "CVC", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
-        return textField
+        let field = ReusableTextField(placeholderTitle: "CVC", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
+        return field
     }()
     
     private lazy var monthField: UITextField = {
-        let textField = ReusableTextField(placeholderTitle: "MM", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
-        return textField
+        let field = ReusableTextField(placeholderTitle: "MM", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .left)
+        return field
     }()
     
     private lazy var yearField: UITextField = {
-        let textField = ReusableTextField(placeholderTitle: "YY", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .center)
-        return textField
+        let field = ReusableTextField(placeholderTitle: "YY", placeholderColor: .white, borderWidth: 0, fieldTextAlignment: .center)
+        return field
     }()
     
     private lazy var dateLabel: UILabel = {
@@ -55,10 +55,7 @@ final class AddCardController: BaseViewController {
     }()
     
     private lazy var submitButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(submitButtonClicked), for: .touchUpInside)
-        button.setTitle("Submit", for: .normal)
-        button.backgroundColor = .lightGray
+        let button = ReusableButton(title: "Add Card", onAction: submitButtonClicked,  bgColor: .lightGray)
         return button
     }()
     
@@ -99,22 +96,22 @@ final class AddCardController: BaseViewController {
            !cvc.isEmpty {
             
             guard pan.count == 19 else {
-                showMessage(title: "Error", message: "Wrong Pan Format", actionTitle: "Ok")
+                showMessage(title: "", message: "Wrong Pan Format", actionTitle: "Ok")
                 return
             }
             
             guard month.count == 2 else {
-                showMessage(title: "Error", message: "Wrong Month Format", actionTitle: "Ok")
+                showMessage(title: "", message: "Wrong Month Format", actionTitle: "Ok")
                 return
             }
             
             guard year.count == 2 else {
-                showMessage(title: "Error", message: "Wrong Year Format", actionTitle: "Ok")
+                showMessage(title: "", message: "Wrong Year Format", actionTitle: "Ok")
                 return
             }
             
             guard cvc.count == 3 else {
-                showMessage(title: "Error", message: "Wrong CVC Format", actionTitle: "Ok")
+                showMessage(title: "", message: "Wrong CVC Format", actionTitle: "Ok")
                 return
             }
             
@@ -139,10 +136,12 @@ final class AddCardController: BaseViewController {
             viewModel.saveCard(model: newCard)
             
             configureUI()
-            navigationController?.popViewController(animated: true)
+            
+            guard let navigation = navigationController else {return}
+            navigation.popViewController(animated: true)
             
         } else {
-            showMessage(title: "Error", message: "Fields cannot be empty", actionTitle: "Ok")
+            showMessage(title: "", message: "Fields cannot be empty", actionTitle: "Ok")
         }
     }
     
@@ -164,7 +163,6 @@ final class AddCardController: BaseViewController {
         view.addSubview(cardTypeImage)
         view.addSubview(cvcField)
         view.addSubview(submitButton)
-//        view.addSubview(yearField)
         
         cardImage.translatesAutoresizingMaskIntoConstraints = false
         cardStack.translatesAutoresizingMaskIntoConstraints = false
@@ -254,7 +252,7 @@ extension AddCardController: UITextFieldDelegate {
             let result = textField.checkMonth()
             
             guard result else {
-                showMessage(title: "Error", message: "wrong month format", actionTitle: "Ok")
+                showMessage(title: "", message: "wrong month format", actionTitle: "Ok")
                 return
             }
             textField.switchTextField(textField: yearField)
@@ -265,7 +263,7 @@ extension AddCardController: UITextFieldDelegate {
             
             let result  = textField.checkYearDigit()
             guard result else {
-                showMessage(title: "Error", message: "Wrong year format", actionTitle: "Ok")
+                showMessage(title: "", message: "Wrong year format", actionTitle: "Ok")
                 return
             }
             textField.switchTextField(textField: cvcField)
@@ -302,7 +300,7 @@ extension AddCardController: UITextFieldDelegate {
         case yearField:
             let result  = textField.checkYearDigit()
             guard result else {
-                showMessage(title: "Error", message: "you can enter numbers between 25 and 28", actionTitle: "Ok")
+                showMessage(title: "", message: "you can enter numbers between 25 and 28", actionTitle: "Ok")
                 return
             }
             

@@ -43,13 +43,13 @@ class RealmHelper {
         }
     }
     
-    func decreaseBalance(pan: String, amount: Double) {
+    func decreaseBalance(pan: String, amount: Double, commission: Double = 0) {
         let cardList = realm.objects(CardDTO.self)
         
         for i in cardList {
             if i.cardNumber == pan {
                 try! realm.write({
-                    i.cardBalance -= amount
+                    i.cardBalance -= (amount + commission)
                 })
             }
         }

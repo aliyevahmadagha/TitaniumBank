@@ -75,6 +75,34 @@ final class TransferController: BaseViewController {
             guard let amount = amountField.text else {return}
             guard let doubleAmount = Double(amount) else {return}
             
+            guard transferViewModel.cardType1 == transferViewModel.cardType2 else {
+                
+                if doubleAmount + 1 > transferViewModel.getBalance(pan: fromtext) {
+                    transferViewModel.success?(.error)
+                    showMessage(title: "", message: "your balance: \(transferViewModel.getBalance(pan: fromtext)), amount with comission: \(doubleAmount + 1)", actionTitle: "Ok")
+                    amountField.text = ""
+                } else {
+                    
+                    transferViewModel.success?(.loading)
+                    viewForIndicator.isHidden = false
+                    indicatorView.startAnimating()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self.transferViewModel.increaseBalance(pan: toText, amount: doubleAmount)
+                        self.transferViewModel.decreaseBalance(pan: fromtext, amount: doubleAmount, commission: 1)
+                        self.transferViewModel.success?(.loaded)
+                        self.indicatorView.stopAnimating()
+                        self.viewForIndicator.isHidden = true
+                        
+                        self.configureFields()
+                        self.transferViewModel.success?(.success)
+                        
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+                return
+            }
+            
             if doubleAmount > transferViewModel.getBalance(pan: fromtext) {
                 
                 transferViewModel.success?(.error)
@@ -118,24 +146,43 @@ final class TransferController: BaseViewController {
         
         switch index {
         case 0:
-            viewModel.callback = { text in
+            viewModel.callback = { [weak self] text, type in
+                guard let self = self else {return}
                 self.fromSelectField.text = text
+                transferViewModel.cardType1 = type
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     if self.fromSelectField.text == self.toSelectField.text {
-                        self.showMessage(title: "Error", message: "you cannot select the same cards", actionTitle: "ok")
+                        self.showMessage(title: "", message: "you cannot select the same cards", actionTitle: "ok")
                         self.fromSelectField.text = ""
                     }
+                    
+                    guard self.transferViewModel.cardType2 != nil else {return}
+                    
+                    if self.transferViewModel.cardType1 != self.transferViewModel.cardType2 {
+                        self.showMessage(title: "", message: "When transferring between Visa and Mastercard, a commission of 1 AZN is charged", actionTitle: "ok")
+                    }
+                    
                 }
             }
         case 1:
-            viewModel.callback = { text in
+            viewModel.callback = { [weak self] text, type in
+                guard let self = self else {return}
                 self.toSelectField.text = text
+                transferViewModel.cardType2 = type
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     if self.fromSelectField.text == self.toSelectField.text {
-                        self.showMessage(title: "Error", message: "you cannot select the same cards", actionTitle: "ok")
+                        self.showMessage(title: "", message: "you cannot select the same cards", actionTitle: "ok")
                         self.toSelectField.text = ""
+                    }
+                    
+                    guard self.transferViewModel.cardType1 != nil else {return}
+                    
+                    if self.transferViewModel.cardType2 != self.transferViewModel.cardType1 {
+                        self.showMessage(title: "", message: "When transferring between Visa and Mastercard, a commission of 1 AZN is charged", actionTitle: "ok")
+                        
                     }
                 }
             }
@@ -223,6 +270,17 @@ extension TransferController: UITextFieldDelegate {
             
         default:
             return false
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        switch textField {
+        case fromSelectField:
+            transferViewModel.cardType1 = nil
+        case toSelectField:
+            transferViewModel.cardType2 = nil
+        default:
+            break
         }
     }
 }

@@ -16,11 +16,14 @@ final class TransferViewModel {
         case error
     }
     
+    var cardType1: String?
+    var cardType2: String?
+    
     private let helper = RealmHelper()
     var success: ((ViewState) -> Void)?
         
-    func decreaseBalance(pan: String, amount: Double) {
-        helper.decreaseBalance(pan: pan, amount: amount)
+    func decreaseBalance(pan: String, amount: Double, commission: Double = 0) {
+        helper.decreaseBalance(pan: pan, amount: amount, commission: commission)
     }
     
     func increaseBalance(pan: String, amount: Double) {

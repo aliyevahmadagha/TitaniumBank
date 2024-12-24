@@ -73,7 +73,8 @@ extension SheetController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let pan = viewModel.getCardModel(index: indexPath.row)
-        viewModel.callback?(pan)
+        let type = viewModel.getCardType(index: indexPath.row)
+        viewModel.callback?(pan, type)
         dismiss(animated: true)
     }
 }

@@ -64,12 +64,20 @@ final class HomeController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
         
-        viewModel.findPath()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: .reloadDataNotification, object: nil)
+    }
+    
+    @objc func reloadCollectionView() {
+        cardCollection.reloadData()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     
@@ -125,26 +133,26 @@ final class HomeController: BaseViewController {
         super.configureRestriction()
         
         NSLayoutConstraint.activate([
-                cardCollection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-                cardCollection.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
-                cardCollection.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -24),
-                cardCollection.heightAnchor.constraint(equalToConstant: 250)
-            ])
+            cardCollection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            cardCollection.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24),
+            cardCollection.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -24),
+            cardCollection.heightAnchor.constraint(equalToConstant: 250)
+        ])
         
         NSLayoutConstraint.activate([
-                cardStack.topAnchor.constraint(equalTo: cardCollection.bottomAnchor, constant: 48),
-                cardStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
+            cardStack.topAnchor.constraint(equalTo: cardCollection.bottomAnchor, constant: 48),
+            cardStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
         
         
         NSLayoutConstraint.activate([
-                transferButton.heightAnchor.constraint(equalToConstant: 48),
-                transferButton.widthAnchor.constraint(equalToConstant: 48),
-                addButton.heightAnchor.constraint(equalToConstant: 48),
-                addButton.widthAnchor.constraint(equalToConstant: 48)
-            ])
+            transferButton.heightAnchor.constraint(equalToConstant: 48),
+            transferButton.widthAnchor.constraint(equalToConstant: 48),
+            addButton.heightAnchor.constraint(equalToConstant: 48),
+            addButton.widthAnchor.constraint(equalToConstant: 48)
+        ])
     }
-
+    
 }
 
 extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource {

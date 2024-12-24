@@ -9,11 +9,20 @@ import Foundation
 
 final class LoginViewModel {
 
-    private let helper = RealmHelper()
+    let helper = RealmHelper()
     
-    func checkUser(email: String, password: String) -> Bool {
-        let isLogin = helper.checkUser(email: email, password: password)
-        return isLogin
+    func checkEmail(email: String) -> Bool {
+        let verify = helper.checkEmail(email: email)
+        return verify
     }
     
+    func checkPassword(password: String) -> Bool {
+        let verify = helper.checkPassword(password: password)
+        return verify
+    }
+    
+    
+    func findPath() {
+        helper.findPath()
+    }
 }

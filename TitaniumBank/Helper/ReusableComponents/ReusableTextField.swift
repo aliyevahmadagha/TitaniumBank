@@ -17,8 +17,11 @@ class ReusableTextField: UITextField {
     private var borderWidth: CGFloat
     private var fieldTextAlignment: NSTextAlignment
     private var cornerRadius: CGFloat
+    private var secureText: Bool
+    private var capitalizationType: UITextAutocapitalizationType
     
-    init(placeholderTitle: String, placeholderFont: String  = "Times New Roman", placeholderSize: CGFloat = 16, placeholderColor: UIColor, borderColor: UIColor = .gray, borderWidth: CGFloat, fieldTextAlignment: NSTextAlignment, cornerRadius: CGFloat = 0) {
+    init(placeholderTitle: String, placeholderFont: String  = "Times New Roman", placeholderSize: CGFloat = 16, placeholderColor: UIColor, borderColor: UIColor = .gray, borderWidth: CGFloat, fieldTextAlignment: NSTextAlignment, cornerRadius: CGFloat = 0, secureText: Bool = false, capitalizationType: UITextAutocapitalizationType = .none) {
+        self.capitalizationType = capitalizationType
         self.placeholderTitle = placeholderTitle
         self.placeholderFont = placeholderFont
         self.placeholderSize = placeholderSize
@@ -27,6 +30,7 @@ class ReusableTextField: UITextField {
         self.borderWidth = borderWidth
         self.fieldTextAlignment = fieldTextAlignment
         self.cornerRadius = cornerRadius
+        self.secureText = secureText
         
         super.init(frame: .zero)
         configurePlaceholder()
@@ -40,6 +44,8 @@ class ReusableTextField: UITextField {
         textColor = placeholderColor
         textAlignment = fieldTextAlignment
         autocapitalizationType = .none
+        isSecureTextEntry = secureText
+        autocapitalizationType = capitalizationType
     }
     
     required init?(coder: NSCoder) {

@@ -37,12 +37,12 @@ final class RegisterController: BaseViewController {
     }()
     
     private lazy var passwordField: UITextField = {
-        let field = ReusableTextField(placeholderTitle: "  ********", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
+        let field = ReusableTextField(placeholderTitle: "  ********", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12, secureText: true)
         return field
     }()
     
     private lazy var finCodeField: UITextField = {
-        let field = ReusableTextField(placeholderTitle: "  QWERTY8", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
+        let field = ReusableTextField(placeholderTitle: "  QWERTY8", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12, capitalizationType: .allCharacters)
         return field
     }()
     
@@ -59,21 +59,48 @@ final class RegisterController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupFields()
+    }
+    
+    fileprivate func setupFields() {
+        fullnameField.delegate = self
+        emailField.delegate = self
+        passwordField.delegate = self
+        finCodeField.delegate = self
     }
     
     @objc private func registerButtonClicked() {
         
-        if let user = fullnameField.text, let email = emailField.text, let fin = finCodeField.text, let password = passwordField.text, !user.isEmpty, !email.isEmpty, !fin.isEmpty, !password.isEmpty {
-            
-            let model = UserModel(userName: user, fin: fin, email: email, password: password)
-            
-            viewModel.createUser(model: model)
-            navigationController?.popViewController(animated: true)
-            
-        } else {
-            showMessage(title: "Error", message: "Fields cannot be empty", actionTitle: "Ok")
+        guard let user = fullnameField.text, let email = emailField.text, let fin = finCodeField.text, let password = passwordField.text, !user.isEmpty, !email.isEmpty, !fin.isEmpty, !password.isEmpty else {
+            showMessage(title: "", message: "Fields cannot be empty", actionTitle: "Ok")
+            return
         }
+        
+        guard user.count > 5 else {
+            showMessage(title: "", message: "The user's full name must not be less than 5 characters", actionTitle: "Ok")
+            return
+        }
+        
+        guard emailField.layer.borderColor == UIColor.green.cgColor else {
+            showMessage(title: "", message: "Wrong email format", actionTitle: "Ok")
+            return
+        }
+        
+        guard fin.count == 7 else {
+            showMessage(title: "", message: "FIN format is incorrect", actionTitle: "Ok")
+            return
+        }
+        
+        guard password.count >= 8 else {
+            showMessage(title: "", message: "Password cannot be less than 8 characters", actionTitle: "Ok")
+            return
+        }
+        
+        let model = UserModel(userName: user, fin: fin, email: email, password: password)
+        viewModel.createUser(model: model)
+        
+        guard let navigation = navigationController else {return}
+        navigation.popViewController(animated: true)
     }
     
     override func configureView() {
@@ -125,5 +152,42 @@ final class RegisterController: BaseViewController {
             passwordField.heightAnchor.constraint(equalToConstant: 36)
         ])
         
+    }
+}
+
+extension RegisterController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        switch textField {
+        case finCodeField:
+            return textField.checkFinCode(range: range, replacementString: string)
+        case passwordField:
+            return textField.passwordFormat(range: range, replacementString: string)
+        case fullnameField:
+            return textField.fullnameFormat(range: range, replacementString: string)
+        case emailField:
+            return textField.checkEmailCount(range: range, replacementString: string)
+        default:
+            return true
+        }
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        
+        switch textField {
+        case emailField:
+            textField.checkEmailFormat()
+            textField.cannotAcceptSpace()
+        case passwordField:
+            textField.checkPassword()
+            textField.cannotAcceptSpace()
+        case finCodeField:
+            textField.checkFin()
+        case fullnameField:
+            textField.checkUserFullname()
+        default:
+            break
+        }
     }
 }

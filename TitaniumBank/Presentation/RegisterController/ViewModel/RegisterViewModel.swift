@@ -22,7 +22,5 @@ final class RegisterViewModel {
         
         helper.saveUser(dtoModel: dto)
         callback?(model.email, model.password)
-      
-    }
-    
+    }    
 }

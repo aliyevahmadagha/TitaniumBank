@@ -9,8 +9,6 @@ import UIKit
 
 final class LoginController: BaseViewController {
     
-    private let helper = RealmHelper()
-    
     private lazy var goRegisterButton: UIButton = {
         let button = ReusableButton(title: "Don’t you have an account", onAction: goRegisterButtonClicked, bgColor: .systemBackground, titleColor: .lightGray)
         return button
@@ -39,7 +37,7 @@ final class LoginController: BaseViewController {
     }()
     
     private lazy var passwordField: UITextField = {
-        let field = ReusableTextField(placeholderTitle: "  ********", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12)
+        let field = ReusableTextField(placeholderTitle: "  ********", placeholderColor: .lightGray, borderWidth: 1, fieldTextAlignment: .left, cornerRadius: 12, secureText: true)
         return field
     }()
 
@@ -57,28 +55,40 @@ final class LoginController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        helper.findPath()
+        viewModel.findPath()
     }
     
     @objc private func loginButtonClicked() {
-        if let email = emailField.text, let password = passwordField.text, !email.isEmpty,  !password.isEmpty {
-            let isLogin = viewModel.checkUser(email: email, password: password)
-            
-            if isLogin {
-                if let scene = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-                    scene.changeRooterToTabBarController()
-                }
-            } else {
-                
-            }
+        
+        guard let email = emailField.text, let password = passwordField.text, !email.isEmpty, !password.isEmpty else {
+            showMessage(title: "", message: "Fields cannot be empty", actionTitle: "Ok")
+            return
         }
+
+            let verifyEmail = viewModel.checkEmail(email: email)
+            let verifyPassword = viewModel.checkPassword(password: password)
+        
+            guard verifyEmail else {
+                showMessage(title: "", message: "User not found", actionTitle: "Ok")
+                return
+            }
+            
+            guard verifyPassword else {
+                showMessage(title: "", message: "The password is incorrect", actionTitle: "Ok")
+                return
+            }
+            
+            guard let scene = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {return}
+            scene.changeRooterToTabBarController()
     }
     
     @objc private func goRegisterButtonClicked() {
         
         let viewModel = RegisterViewModel()
         let controller = RegisterController(viewModel: viewModel)
-        navigationController?.pushViewController(controller, animated: true)
+        
+        guard let navigation = navigationController else {return}
+        navigation.pushViewController(controller, animated: true)
         
         viewModel.callback = { [weak self] email, password in
             guard let self = self else {return}
@@ -140,8 +150,7 @@ final class LoginController: BaseViewController {
             goRegisterButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24),
             goRegisterButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 4),
         ])
-        
     }
-
 }
+
 

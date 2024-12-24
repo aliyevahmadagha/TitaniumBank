@@ -62,6 +62,10 @@ final class MyCardsController: BaseViewController {
         }
     }
     
+    fileprivate func reloadMyCards() {
+        NotificationCenter.default.post(name: .reloadDataNotification, object: nil)
+    }
+    
     override func configureTargets() {
         super.configureTargets()
         createBarButton()
@@ -116,6 +120,7 @@ extension MyCardsController: UITableViewDelegate, UITableViewDataSource {
             
             let viewmodel = AddCardViewModel()
             viewmodel.listener?(.success)
+            self.reloadMyCards()
         }
         
         return UISwipeActionsConfiguration(actions: [deleteAction])

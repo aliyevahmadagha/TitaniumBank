@@ -23,12 +23,20 @@ class RealmHelper {
         return cardList
     }
     
-    func checkUser(email: String, password: String) -> Bool {
+    func checkEmail(email: String) -> Bool {
         let realmUserList = realm.objects(UserDTO.self)
-        let trueEmail = realmUserList.contains(where: {$0.email == email})
-        let truePassword = realmUserList.contains{$0.password == password}
-        
-        if trueEmail && truePassword {
+        let verifyEmail = realmUserList.contains(where: {$0.email == email})
+        if verifyEmail {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func checkPassword(password: String) -> Bool {
+        let realmUserList = realm.objects(UserDTO.self)
+        let verifyPassword = realmUserList.contains(where: {$0.password == password})
+        if verifyPassword {
             return true
         } else {
             return false

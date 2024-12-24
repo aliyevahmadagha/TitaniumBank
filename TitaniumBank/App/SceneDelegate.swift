@@ -11,7 +11,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
      
         guard let newScene = (scene as? UIWindowScene) else { return }
@@ -35,7 +34,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func changeRooterToLoginController() {
         let controller = LoginController(viewModel: LoginViewModel())
-        window?.rootViewController = controller
+        let navController = UINavigationController(rootViewController: controller)
+        window?.rootViewController = navController
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

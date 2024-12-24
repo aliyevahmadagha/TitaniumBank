@@ -127,6 +127,42 @@ extension UITextField {
         return prospectiveText.range(of: "^[0-9]{0,3}$", options: .regularExpression) != nil
     }
     
+    func checkPassword() {
+        let currentText = self.text ?? ""
+        
+        guard currentText.count < 8 else {
+            self.layer.borderColor = UIColor.green.cgColor
+            return 
+        }
+        self.layer.borderColor = UIColor.red.cgColor
+    }
+    
+    func checkFin() {
+        let currentText = self.text ?? ""
+        
+        guard currentText.count < 7 else {
+            self.layer.borderColor = UIColor.green.cgColor
+            return
+        }
+        self.layer.borderColor = UIColor.red.cgColor
+    }
+    
+    func checkUserFullname() {
+        let currentText = self.text ?? ""
+        
+        guard currentText.count < 5 else {
+            self.layer.borderColor = UIColor.green.cgColor
+            return
+        }
+        self.layer.borderColor = UIColor.red.cgColor
+    }
+    
+    func checkFinCode(range: NSRange, replacementString string: String) -> Bool {
+        let currentText = self.text ?? ""
+        let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        return prospectiveText.range(of: "^[a-zA-Z0-9]{0,7}$", options: .regularExpression) != nil
+    }
+    
     func checkCardNumber(range: NSRange, replacementString string: String) -> Bool {
         let currentText = self.text ?? ""
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
@@ -190,4 +226,61 @@ extension UITextField {
         guard text.count == number else {return false}
         return true
     }
+    
+    func checkEmailCount(range: NSRange, replacementString string: String) -> Bool {
+        let currentText = self.text ?? ""
+        
+        let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        let regexPattern = "^.{0,35}$"
+        
+        return prospectiveText.range(of: regexPattern, options: .regularExpression) != nil
+    }
+    
+    func cannotAcceptSpace() {
+        
+        let currentText = self.text ?? ""
+        
+        if currentText.contains(" ") {
+            self.text?.removeLast()
+        }
+    }
+    
+    func isValidEmail() -> Bool {
+        guard let email = self.text else { return false }
+        
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,35}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
+    
+    func checkEmailFormat() {
+        
+        if isValidEmail() {
+            self.layer.borderColor = UIColor.green.cgColor
+            self.layer.borderWidth = 1
+        } else {
+            self.layer.borderColor = UIColor.red.cgColor
+            self.layer.borderWidth = 1
+        }
+    }
+    
+    func passwordFormat(range: NSRange, replacementString string: String) -> Bool {
+        let currentText = self.text ?? ""
+        let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        let regexPattern = "^.{0,20}$"
+        return prospectiveText.range(of: regexPattern, options: .regularExpression) != nil
+    }
+    
+    func fullnameFormat(range: NSRange, replacementString string: String) -> Bool {
+        let currentText = self.text ?? ""
+        
+        let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        let regexPattern = "^[a-zA-Z]{0,30}$"
+        
+        return prospectiveText.range(of: regexPattern, options: .regularExpression) != nil
+    }
+}
+
+extension Notification.Name {
+    static let reloadDataNotification = Notification.Name("reloadDataNotification")
 }
